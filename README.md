@@ -1,12 +1,52 @@
-# React + Vite
+# 📅 Agenda Académica
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web diseñada para ayudar a estudiantes universitarios a organizar su vida académica. Permite registrar entregas de trabajos, fechas de exámenes, rutinas de estudio y establecer objetivos a corto, mediano o largo plazo.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tecnologías utilizadas
 
-## Expanding the ESLint configuration
+- **Frontend**: React.js
+- **Backend**: 
+- **Base de Datos**: 
+- **Estado global**: 
+- **Estilos**: CSS / Bootstrap 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧠 Funcionalidades principales
+
+- Registro de eventos académicos (exámenes, entregas, etc.)
+- Planificación de objetivos personales
+- Visualización en vistas tipo calendario (mensual y semanal)
+- Sistema de tareas pendientes
+- Recordatorios asociados a eventos
+- Clasificación mediante categorías personalizables
+
+---
+
+## 📱 Vistas del frontend
+
+- **Calendario mensual**
+- **Calendario semanal**
+- **Crear / editar evento**
+- **Listado de objetivos y tareas**
+- **Inicio / login de usuario**
+
+---
+
+## 🚧 Limitaciones actuales
+
+- No se incluyen notificaciones push o alertas sonoras.
+- No se incluye autenticación con redes sociales.
+- No hay una vista diaria implementada por el momento.
+
+---
+
+## 👥 Integrantes del equipo
+
+- Santiago Lorenzatti
+- Juan Ignacio Odetti
+- Lucia Pesce
+
+---
