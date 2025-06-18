@@ -5,15 +5,18 @@ import {
   obtenerObjetivoPorId,
   crearObjetivo,
   actualizarObjetivo,
-  eliminarObjetivo
+  eliminarObjetivo,
+  manejarCheck
 } from '../controllers/objetivoController.js';
+import { verificarToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', obtenerObjetivos);
-router.get('/:id', obtenerObjetivoPorId);
-router.post('/', crearObjetivo);
-router.put('/:id', actualizarObjetivo);
-router.delete('/:id', eliminarObjetivo);
+router.get('/', verificarToken, obtenerObjetivos);
+router.get('/:id', verificarToken, obtenerObjetivoPorId);
+router.post('/', verificarToken, crearObjetivo);
+router.put('/:id', verificarToken, actualizarObjetivo);
+router.delete('/:id', verificarToken, eliminarObjetivo);
+router.patch('/:id/check', verificarToken, manejarCheck);
 
 export default router;

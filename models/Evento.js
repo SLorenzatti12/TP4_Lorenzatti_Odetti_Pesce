@@ -1,6 +1,7 @@
 // models/Evento.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import Usuario from '../models/Usuario.js';
 
 const Evento = sequelize.define('Evento', {
   titulo: {
@@ -22,7 +23,17 @@ const Evento = sequelize.define('Evento', {
   lugar: {
     type: DataTypes.STRING,
     allowNull: true,
-  }
+  },
+  usuarioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Usuario,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+ },
 });
 
 export default Evento;

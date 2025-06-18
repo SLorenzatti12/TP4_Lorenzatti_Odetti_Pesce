@@ -1,6 +1,7 @@
 // models/Tarea.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import Usuario from '../models/Usuario.js';
 
 const Tarea = sequelize.define('Tarea', {
   titulo: {
@@ -18,7 +19,17 @@ const Tarea = sequelize.define('Tarea', {
   fecha_limite: {
     type: DataTypes.DATE,
     allowNull: true,
-  }
+  },
+ usuarioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Usuario,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+ },
 });
 
 export default Tarea;

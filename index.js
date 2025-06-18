@@ -4,15 +4,22 @@ import tareaRoutes from './routes/tareasRoutes.js';
 import objetivoRoutes from './routes/objetivoRoutes.js';
 import recordatorioRoutes from './routes/recordatorioRoutes.js';
 import categoriaRoutes from './routes/categoriaRoutes.js';
+import usuarioRoutes from './routes/usuarioRoutes.js';
 
 import { sequelize } from './models/index.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 // Rutas
+app.use('/api/users', usuarioRoutes);
 app.use('/api/events', eventoRoutes);
-app.use('api/tasks', tareaRoutes);
+app.use('/api/tasks', tareaRoutes);
 app.use('/api/goals', objetivoRoutes);
 app.use('/api/reminders', recordatorioRoutes);
 app.use('/api/categories', categoriaRoutes);

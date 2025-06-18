@@ -7,13 +7,14 @@ import {
   actualizarCategoria,
   eliminarCategoria
 } from '../controllers/categoriaController.js';
+import { verificarToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', obtenerCategorias);
-router.get('/:id', obtenerCategoriaPorId);
-router.post('/', crearCategoria);
-router.put('/:id', actualizarCategoria);
-router.delete('/:id', eliminarCategoria);
+router.get('/', verificarToken, obtenerCategorias);
+router.get('/:id', verificarToken, obtenerCategoriaPorId);
+router.post('/', verificarToken, crearCategoria);
+router.put('/:id', verificarToken, actualizarCategoria);
+router.delete('/:id', verificarToken, eliminarCategoria);
 
 export default router;

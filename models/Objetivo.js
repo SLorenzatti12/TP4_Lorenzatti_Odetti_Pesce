@@ -1,6 +1,7 @@
 // models/Objetivo.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import Usuario from '../models/Usuario.js';
 
 const Objetivo = sequelize.define('Objetivo', {
   titulo: {
@@ -18,7 +19,17 @@ const Objetivo = sequelize.define('Objetivo', {
   completado: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
-  }
+  },
+  usuarioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Usuario,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+ },
 });
 
 export default Objetivo;
