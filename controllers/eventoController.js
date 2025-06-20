@@ -30,25 +30,23 @@ export const obtenerEventoPorId = async (req, res) => {
 
 // Crear un evento
 export const crearEvento = async (req, res) => {
-  const { title, description, beginDate, duration, place } = req.body;
-
+  const { title, description, beginDate, duration, place, tareaId } = req.body;
   let errors = [];
 
   if (!title) errors.push('El título es obligatorio');
   if (!description) errors.push('La descripción es obligatoria');
   if (!beginDate) errors.push('La fecha de inicio es obligatoria');
-  if (duration === undefined || duration === null) {
-    errors.push('La duración es obligatoria');
-  } else if (typeof duration !== 'number' || isNaN(duration)) {
-    errors.push('La duración debe ser un número');
-  } else if (duration <= 0) {
-    errors.push('La duración debe ser mayor a 0');
-  }
 
-  if (typeof title !== 'string') errors.push('El título debe ser un string');
-  if (typeof description !== 'string') errors.push('La descripción debe ser un string');
   if (typeof beginDate !== 'string' || isNaN(Date.parse(beginDate))) {
     errors.push('La fecha de inicio no es válida');
+  }
+
+  if (duration !== undefined && (isNaN(duration) || duration <= 0)) {
+    errors.push('La duración debe ser un número mayor a 0');
+  }
+
+  if (tareaId && isNaN(tareaId)) {
+    errors.push('El ID de la tarea debe ser un número');
   }
 
   if (errors.length > 0) {
@@ -62,7 +60,8 @@ export const crearEvento = async (req, res) => {
       fecha: beginDate,
       duracion_minutos: duration,
       lugar: place,
-      usuarioId: req.usuario.id // Asociar evento al usuario autenticado
+      usuarioId: req.usuario.id,
+      tareaId: tareaId || null
     });
 
     res.status(201).json(newEvent);
@@ -71,29 +70,20 @@ export const crearEvento = async (req, res) => {
   }
 };
 
-
 // Editar un evento (solo si pertenece al usuario)
 export const actualizarEvento = async (req, res) => {
   const { id } = req.params;
-  const { title, description, beginDate, duration, place } = req.body;
-
+  const { title, description, beginDate, duration, place, tareaId } = req.body;
   let errors = [];
 
-  if (!title) errors.push('El título es obligatorio');
-  if (!description) errors.push('La descripción es obligatoria');
-  if (!beginDate) errors.push('La fecha de inicio es obligatoria');
-
-  if (typeof title !== 'string') errors.push('El título debe ser un string');
-  if (typeof description !== 'string') errors.push('La descripción debe ser un string');
-  if (typeof beginDate !== 'string' || isNaN(Date.parse(beginDate))) {
-    errors.push('La fecha de inicio no es válida');
-  }
+  if (!title || typeof title !== 'string') errors.push('Título inválido');
+  if (!description || typeof description !== 'string') errors.push('Descripción inválida');
+  if (!beginDate || isNaN(Date.parse(beginDate))) errors.push('Fecha inválida');
+  if (tareaId && isNaN(tareaId)) errors.push('TareaId inválido');
 
   if (duration !== undefined && duration !== null) {
-    if (typeof duration !== 'number' || isNaN(duration)) {
-      errors.push('La duración debe ser un número');
-    } else if (duration <= 0) {
-      errors.push('La duración debe ser mayor a 0');
+    if (typeof duration !== 'number' || isNaN(duration) || duration <= 0) {
+      errors.push('Duración inválida');
     }
   }
 
@@ -108,12 +98,12 @@ export const actualizarEvento = async (req, res) => {
       return res.status(404).json({ error: 'Evento no encontrado o no autorizado' });
     }
 
-    // Actualizar solo campos válidos
     evento.titulo = title;
     evento.descripcion = description;
     evento.fecha = beginDate;
     evento.duracion_minutos = duration;
     evento.lugar = place;
+    evento.tareaId = tareaId || null;
 
     await evento.save();
 

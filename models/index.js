@@ -32,6 +32,10 @@ Evento.belongsTo(Categoria, { foreignKey: 'categoriaId' });
 Objetivo.hasMany(Tarea, { foreignKey: 'objetivoId' });
 Tarea.belongsTo(Objetivo, { foreignKey: 'objetivoId' });
 
+Evento.belongsTo(Tarea, { foreignKey: 'tareaId', as: 'tarea' });
+Tarea.hasMany(Evento, { foreignKey: 'tareaId', as: 'eventos' });
+
+
 // Exportar sequelize y modelos
 export {
   sequelize,

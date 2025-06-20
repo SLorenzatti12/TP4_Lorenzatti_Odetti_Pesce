@@ -20,7 +20,11 @@ const Tarea = sequelize.define('Tarea', {
     type: DataTypes.DATE,
     allowNull: true,
   },
- usuarioId: {
+  prioridad: {
+    type: DataTypes.NUMBER,
+    allowNull: false,
+  },
+  usuarioId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {

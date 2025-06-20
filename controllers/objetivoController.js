@@ -32,16 +32,16 @@ export const obtenerObjetivoPorId = async (req, res) => {
 
 // Crear nuevo objetivo (el usuarioId viene del token)
 export const crearObjetivo = async (req, res) => {
-  const { title, description, deadLine } = req.body;
+  const { title, description, deadLine, tareaId } = req.body;
   let errors = [];
 
   if (!title) errors.push('El título es obligatorio');
   if (!description) errors.push('La descripción es obligatoria');
   if (!deadLine) errors.push('La fecha límite es obligatoria');
+  if (isNaN(Date.parse(deadLine))) errors.push('La fecha límite no es válida');
 
   if (typeof title !== 'string') errors.push('El título debe ser un string');
   if (typeof description !== 'string') errors.push('La descripción debe ser un string');
-  if (isNaN(Date.parse(deadLine))) errors.push('La fecha límite no es válida');
 
   if (errors.length > 0) {
     return res.status(400).json({ errores: errors });
@@ -49,12 +49,14 @@ export const crearObjetivo = async (req, res) => {
 
   try {
     const nuevoObjetivo = await Objetivo.create({
-      titulo:title,
-      descripcion:description,
+      titulo: title,
+      descripcion: description,
       fecha_limite: deadLine,
-      check: false,
-      usuarioId: req.usuario.id
+      completado: false,
+      usuarioId: req.usuario.id,
+      TareaId: tareaId || null // Puede ser null
     });
+
     res.status(201).json(nuevoObjetivo);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -64,22 +66,27 @@ export const crearObjetivo = async (req, res) => {
 // Actualizar objetivo (solo si pertenece al usuario)
 export const actualizarObjetivo = async (req, res) => {
   const { id } = req.params;
-  const { title, description, beginDate, deadLine } = req.body;
+  const { title, description, deadLine, tareaId } = req.body;
   let errors = [];
 
   if (!title) errors.push('El título es obligatorio');
   if (!description) errors.push('La descripción es obligatoria');
   if (!deadLine) errors.push('La fecha límite es obligatoria');
+  if (isNaN(Date.parse(deadLine))) errors.push('La fecha límite no es válida');
 
   if (typeof title !== 'string') errors.push('El título debe ser un string');
   if (typeof description !== 'string') errors.push('La descripción debe ser un string');
-  if (isNaN(Date.parse(deadLine))) errors.push('La fecha límite no es válida');
 
   if (errors.length > 0) {
     return res.status(400).json({ errores: errors });
   }
 
-  const newData = { titulo: title, descripcion: description, fecha_limite: deadLine };
+  const newData = {
+    titulo: title,
+    descripcion: description,
+    fecha_limite: deadLine,
+    TareaId: tareaId || null
+  };
 
   try {
     const [updatedCount] = await Objetivo.update(newData, {

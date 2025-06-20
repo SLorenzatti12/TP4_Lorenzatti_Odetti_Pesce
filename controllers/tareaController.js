@@ -40,36 +40,25 @@ export const obtenerTareaPorId = async (req, res) => {
 };
 
 export const crearTarea = async (req, res) => {
-  const { title, description, beginDate, deadLine, priority } = req.body;
+  const { title, description, deadLine, priority } = req.body;
 
   let errors = [];
 
   if (!title) errors.push('El título es obligatorio');
   if (!description) errors.push('La descripción es obligatoria');
-  if (!beginDate) errors.push('La fecha de inicio es obligatoria');
   if (!deadLine) errors.push('La fecha límite es obligatoria');
   if (priority === undefined || priority === null) errors.push('La prioridad es obligatoria');
 
   if (title && typeof title !== 'string') errors.push('El título debe ser un string');
   if (description && typeof description !== 'string') errors.push('La descripción debe ser un string');
-  if (beginDate && (typeof beginDate !== 'string' || isNaN(Date.parse(beginDate)))) {
-    errors.push('La fecha de inicio no es válida');
-  }
   if (deadLine && (typeof deadLine !== 'string' || isNaN(Date.parse(deadLine)))) {
     errors.push('La fecha límite no es válida');
   }
-  if (priority !== undefined && typeof priority !== 'number') {
-    errors.push('La prioridad debe ser un número');
-  }
-
-  if (
-    typeof beginDate === 'string' &&
-    typeof deadLine === 'string' &&
-    !isNaN(Date.parse(beginDate)) &&
-    !isNaN(Date.parse(deadLine))
-  ) {
-    if (new Date(beginDate) > new Date(deadLine)) {
-      errors.push('La fecha de inicio no puede ser posterior a la fecha límite');
+  if (priority !== undefined) {
+    if (typeof priority !== 'number') {
+      errors.push('La prioridad debe ser un número');
+    } else if (![1, 2, 3].includes(priority)) {
+      errors.push('La prioridad debe ser 1, 2 o 3');
     }
   }
 
@@ -83,7 +72,6 @@ export const crearTarea = async (req, res) => {
     const nuevaTarea = await Tarea.create({
       titulo: title,
       descripcion: description,
-      fechaInicio: beginDate,
       fechaLimite: deadLine,
       prioridad: priority,
       usuarioId,
@@ -97,37 +85,26 @@ export const crearTarea = async (req, res) => {
 
 export const actualizarTarea = async (req, res) => {
   const { id } = req.params;
-  const { title, description, beginDate, deadLine, priority } = req.body;
+  const { title, description, deadLine, priority } = req.body;
   const usuarioId = req.usuario.id;
 
   let errors = [];
 
   if (!title) errors.push('El título es obligatorio');
   if (!description) errors.push('La descripción es obligatoria');
-  if (!beginDate) errors.push('La fecha de inicio es obligatoria');
   if (!deadLine) errors.push('La fecha límite es obligatoria');
   if (priority === undefined || priority === null) errors.push('La prioridad es obligatoria');
 
   if (title && typeof title !== 'string') errors.push('El título debe ser un string');
   if (description && typeof description !== 'string') errors.push('La descripción debe ser un string');
-  if (beginDate && (typeof beginDate !== 'string' || isNaN(Date.parse(beginDate)))) {
-    errors.push('La fecha de inicio no es válida');
-  }
   if (deadLine && (typeof deadLine !== 'string' || isNaN(Date.parse(deadLine)))) {
     errors.push('La fecha límite no es válida');
   }
-  if (priority !== undefined && typeof priority !== 'number') {
-    errors.push('La prioridad debe ser un número');
-  }
-
-  if (
-    typeof beginDate === 'string' &&
-    typeof deadLine === 'string' &&
-    !isNaN(Date.parse(beginDate)) &&
-    !isNaN(Date.parse(deadLine))
-  ) {
-    if (new Date(beginDate) > new Date(deadLine)) {
-      errors.push('La fecha de inicio no puede ser posterior a la fecha límite');
+  if (priority !== undefined) {
+    if (typeof priority !== 'number') {
+      errors.push('La prioridad debe ser un número');
+    } else if (![1, 2, 3].includes(priority)) {
+      errors.push('La prioridad debe ser 1, 2 o 3');
     }
   }
 
@@ -146,16 +123,14 @@ export const actualizarTarea = async (req, res) => {
       return res.status(403).json({ error: 'No tienes permiso para modificar esta tarea' });
     }
 
-    await tarea.update({  
+    await tarea.update({
       titulo: title,
       descripcion: description,
-      fechaInicio: beginDate,
       fechaLimite: deadLine,
       prioridad: priority,
     });
 
     res.status(200).json({ message: 'Tarea actualizada correctamente' });
-
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

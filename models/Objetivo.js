@@ -1,7 +1,7 @@
-// models/Objetivo.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import Usuario from '../models/Usuario.js';
+import Usuario from './Usuario.js';
+import Tarea from './Tarea.js'; // Asegurate de importar el modelo
 
 const Objetivo = sequelize.define('Objetivo', {
   titulo: {
@@ -29,7 +29,17 @@ const Objetivo = sequelize.define('Objetivo', {
     },
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
- },
+  },
+  TareaId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: Tarea,
+      key: 'id',
+    },
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  },
 });
 
 export default Objetivo;
